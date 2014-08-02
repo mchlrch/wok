@@ -1,0 +1,33 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Michael Rauch
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Project: http://www.wok-lang.org
+ *
+ * Contributors:
+ * Michael Rauch - initial API and implementation
+ *******************************************************************************/
+module ch.semantonic.wok.generator.vis.XmiGenerator
+
+import org.eclipse.emf.mwe.utils.*
+
+var modelPath = "/home/mira/x/dev/workspace/runtime-EclipseXtext/wok-samples"
+
+Workflow {
+
+	component = org.eclipse.xtext.mwe.Reader {
+		path = modelPath
+		register = ch.semantonic.wok.dsl.WokDslStandaloneSetup {}
+		load = {
+			slot = "elements"
+			type = "AbstractElement"
+		}
+	}
+
+	component = XmiWriter {
+		inSlot = "elements"
+	}
+} 

@@ -1,0 +1,5 @@
+/bin/
+/dump.xmi
+/dump.xmi.jpg
+/xtend-gen/**
+plugin.xml_gen
