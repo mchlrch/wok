@@ -13,17 +13,16 @@
 package ch.semantonic.wok.dsl.tests
 
 import ch.semantonic.wok.dsl.WokDslInjectorProvider
+import ch.semantonic.wok.dsl.wokDsl.BasicBox
 import ch.semantonic.wok.dsl.wokDsl.DslModel
-import ch.semantonic.wok.dsl.wokDsl.Subject
+import ch.semantonic.wok.dsl.wokDsl.TextItem
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
-//import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import ch.semantonic.wok.dsl.wokDsl.Attribute
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(WokDslInjectorProvider))
@@ -41,12 +40,12 @@ class ParserTest {
 			}
 		'''.parse
 		
-		val subject = model.getElements().get(0) as Subject
-		Assert::assertEquals("Wikimania", subject.getName())
+		val box = model.getElements().get(0) as BasicBox
+		Assert::assertEquals("Wikimania", box.getName())
 		
-		val property = subject.getFeatures().get(0) as Attribute
-		Assert::assertEquals("date", property.name);
-		Assert::assertEquals("8–10 August 2014", property.value);
+		val item = box.getItems().get(0) as TextItem
+		Assert::assertEquals("date", item.label);
+		Assert::assertEquals("8–10 August 2014", item.value);
 	}
 	
 //	@Test

@@ -12,10 +12,10 @@
  *******************************************************************************/
 package ch.semantonic.wok.dsl.generator
 
+import ch.semantonic.wok.dsl.wokDsl.Box
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
-import ch.semantonic.wok.dsl.wokDsl.Subject
+import org.eclipse.xtext.generator.IGenerator
 
 /**
  * Generates code from your model files on save.
@@ -26,10 +26,10 @@ class WokDslGenerator implements IGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val uri = resource.URI
-		val fileName = uri.segmentsList.last + '_' + uri.hashCode + '_subjects.txt'
+		val fileName = uri.segmentsList.last + '_' + uri.hashCode + '_boxen.txt'
 		fsa.generateFile(fileName, 
 			resource.allContents
-				.filter(typeof(Subject))
+				.filter(typeof(Box))
 				.map[name]
 				.join('\n'))
 	}

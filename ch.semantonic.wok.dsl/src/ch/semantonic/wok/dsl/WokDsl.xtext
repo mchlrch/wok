@@ -15,39 +15,46 @@ grammar ch.semantonic.wok.dsl.WokDsl with org.eclipse.xtext.common.Terminals
 generate wokDsl "http://www.semantonic.ch/wok/dsl/WokDsl"
 
 DslModel:
-	importSection=ImportSection?
+//	importSection=ImportSection?
 	elements+=AbstractElement*;
 
 AbstractElement:
-	Subject;
+	Box;
 
-Subject:
+Box:
+	BasicBox | IncludedBox;
+
+BasicBox:
 	name=ID '{'
-	features+=Feature*
+		items+=Item*
 	'}';
-
-Feature:
-	Attribute | Subject | ReferencedSubject | EmbeddedSubject;
-
-Attribute:
-	(name=ID ':')? value=STRING;
-
-ReferencedSubject:
-	(name=ID ':')? '_'value=[Subject | QualifiedName];
 	
-EmbeddedSubject:
-	'{' value=[Subject | QualifiedName] '}';
- 
+IncludedBox:
+	'[' insert=[Box | QualifiedName] ']' 'as' name=ID;
+
+Item:
+	TextItem | ContainedBoxItem | ReferencedBoxItem;
+//    x: ""         x: Y{}            x:  _Y
+
+TextItem:
+	(label=ID ':')? value=STRING;
+
+ContainedBoxItem:
+	(label=ID ':')? value=Box;
+
+ReferencedBoxItem:
+	(label=ID ':')? value=[Box | QualifiedName];
+	
 QualifiedName:
 	ID ('.' ID)*;
 
-QualifiedNameWithWildcard:
-	QualifiedName '.' '*';
+//QualifiedNameWithWildcard:
+//	QualifiedName '.' '*';
 
 terminal ID: '^'?('a'..'z'|'A'..'Z'|'0'..'9') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
-ImportSection:
-	importDeclarations+=ImportDeclaration+;
-
-ImportDeclaration:
-	'import' importedNamespace=QualifiedNameWithWildcard ';';
+//ImportSection:
+//	importDeclarations+=ImportDeclaration+;
+//
+//ImportDeclaration:
+//	'import' importedNamespace=QualifiedNameWithWildcard ';';

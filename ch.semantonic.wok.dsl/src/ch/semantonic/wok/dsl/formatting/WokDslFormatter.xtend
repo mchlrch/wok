@@ -37,34 +37,39 @@ class WokDslFormatter extends AbstractDeclarativeFormatter {
 		c.setLinewrap(0, 1, 2).before(ML_COMMENTRule)
 		c.setLinewrap(0, 1, 1).after(ML_COMMENTRule)
 
-		// ImportDeclaration
-		c.setNoSpace().before(importDeclarationAccess.semicolonKeyword_2);
-		c.setLinewrap(1, 2, 2).after(importDeclarationAccess.semicolonKeyword_2);
+//		// ImportDeclaration
+//		c.setNoSpace().before(importDeclarationAccess.semicolonKeyword_2);
+//		c.setLinewrap(1, 2, 2).after(importDeclarationAccess.semicolonKeyword_2);
 		
 		// AbstractElement
 		c.setLinewrap(1, 2, 2).before(abstractElementRule);
 
-		// Subject
-		var subjectLeftCurlyBracket = subjectAccess.leftCurlyBracketKeyword_1;
-		var subjectRightCurlyBracket = subjectAccess.rightCurlyBracketKeyword_3;
-		c.setIndentationIncrement().after(subjectLeftCurlyBracket);
-		c.setIndentationDecrement().before(subjectRightCurlyBracket);
-		c.setLinewrap(0, 1, 2).after(subjectLeftCurlyBracket);
-		c.setLinewrap(0, 1, 1).before(subjectRightCurlyBracket);
-		c.setLinewrap(1, 1, 2).after(subjectRightCurlyBracket);
+		// BasicBox
+		var boxLeftCurlyBracket = basicBoxAccess.leftCurlyBracketKeyword_1;
+		var boxRightCurlyBracket = basicBoxAccess.rightCurlyBracketKeyword_3;
+		c.setIndentationIncrement().after(boxLeftCurlyBracket);
+		c.setIndentationDecrement().before(boxRightCurlyBracket);
+		c.setLinewrap(0, 1, 2).after(boxLeftCurlyBracket);
+		c.setLinewrap(0, 1, 1).before(boxRightCurlyBracket);
+		c.setLinewrap(1, 1, 2).after(boxRightCurlyBracket);
 
-		// EmbeddedSubject
-		c.setNoSpace().after(embeddedSubjectAccess.leftCurlyBracketKeyword_0);
-		c.setNoSpace().before(embeddedSubjectAccess.rightCurlyBracketKeyword_2);
+		// IncludedBox
+		c.setNoSpace().after(includedBoxAccess.leftSquareBracketKeyword_0);
+		c.setNoSpace().before(includedBoxAccess.rightSquareBracketKeyword_2);
+		c.setLinewrap(1, 1, 2).after(getIncludedBoxRule);
 
-		// Feature
-		c.setLinewrap(1, 1, 2).before(featureRule);
+		// Item
+		c.setLinewrap(1, 1, 2).before(itemRule);
 
-		// Attribute
-		c.setNoSpace().before(attributeAccess.colonKeyword_0_1);
+		// TextItem
+		c.setNoSpace().before(textItemAccess.colonKeyword_0_1);
+		
+		// ContainedBoxItem
+		c.setNoSpace().before(containedBoxItemAccess.colonKeyword_0_1);
 
-		// ReferencedSubject
-		c.setNoSpace().before(referencedSubjectAccess.colonKeyword_0_1);
+		// ReferencedBoxItem
+		c.setNoSpace().before(referencedBoxItemAccess.colonKeyword_0_1);
+		c.setNoSpace().after(referencedBoxItemAccess.findKeywords("_").get(0));
 	}
 
 }
