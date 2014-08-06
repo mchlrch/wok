@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="wok-lang editor updatesite">
+      Updatesite for the wok-lang.org editor plugins
+   </description>
+   <feature url="features/ch.semantonic.wok.dsl.sdk_1.0.0.201408062201.jar" id="ch.semantonic.wok.dsl.sdk" version="1.0.0.201408062201"/>
+</site>
