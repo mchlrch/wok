@@ -14,7 +14,7 @@ package ch.semantonic.wok.dsl.tests
 
 import ch.semantonic.wok.dsl.WokDslInjectorProvider
 import ch.semantonic.wok.dsl.wokDsl.BasicBox
-import ch.semantonic.wok.dsl.wokDsl.DslModel
+import ch.semantonic.wok.dsl.wokDsl.DslRoot
 import ch.semantonic.wok.dsl.wokDsl.TextItem
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith
 @InjectWith(typeof(WokDslInjectorProvider))
 class ParserTest {
 	
-	@Inject extension ParseHelper<DslModel>
+	@Inject extension ParseHelper<DslRoot>
 //	@Inject extension ValidationTestHelper
 
 	@Test

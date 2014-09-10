@@ -14,7 +14,7 @@ grammar ch.semantonic.wok.dsl.WokDsl with org.eclipse.xtext.common.Terminals
 
 generate wokDsl "http://www.semantonic.ch/wok/dsl/WokDsl"
 
-DslModel:
+DslRoot:
 //	importSection=ImportSection?
 	elements+=AbstractElement*;
 
