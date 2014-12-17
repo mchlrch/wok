@@ -16,10 +16,12 @@ import ch.semantonic.wok.dsl.WokDslInjectorProvider
 import ch.semantonic.wok.dsl.wokDsl.BasicBox
 import ch.semantonic.wok.dsl.wokDsl.DslRoot
 import ch.semantonic.wok.dsl.wokDsl.TextItem
+import ch.semantonic.wok.dsl.wokDsl.WokDslPackage
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.junit4.validation.ValidationTestHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,7 +31,7 @@ import org.junit.runner.RunWith
 class ParserTest {
 	
 	@Inject extension ParseHelper<DslRoot>
-//	@Inject extension ValidationTestHelper
+	@Inject extension ValidationTestHelper
 
 	@Test
 	def void testParsing() {
@@ -46,6 +48,38 @@ class ParserTest {
 		val item = box.getItems().get(0) as TextItem
 		Assert::assertEquals("date", item.label);
 		Assert::assertEquals("8–10 August 2014", item.value);
+	}
+	
+	@Test
+	def void shouldFailOnSelfReferencingIncludedBox() {
+		'''
+			foo {}
+			[foo] as bar
+			baz {
+			  [foo] as theFoo
+			  [bar] as theBar
+			  [theBar] as theBarAgain 
+			}
+		'''.parse.assertNoErrors
+		
+		'''
+			foo {}
+			[foo] as _foo
+			baz {
+			  [_foo] as foo
+			}
+		'''.parse.assertNoErrors
+		
+		'''
+			[foo] as foo
+		'''.parse.assertError(WokDslPackage.Literals.INCLUDED_BOX, 'org.eclipse.xtext.diagnostics.Diagnostic.Linking')
+		
+		'''
+			foo {}    // not referencable because shadowed by baz.foo 
+			baz {
+			  [foo] as foo
+			}
+		'''.parse.assertError(WokDslPackage.Literals.INCLUDED_BOX, 'org.eclipse.xtext.diagnostics.Diagnostic.Linking')
 	}
 	
 //	@Test

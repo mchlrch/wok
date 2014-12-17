@@ -12,6 +12,14 @@
  *******************************************************************************/
 package ch.semantonic.wok.dsl.scoping
 
+import ch.semantonic.wok.dsl.wokDsl.IncludedBox
+import javax.inject.Inject
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.scoping.IScope
+import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
+import org.eclipse.xtext.scoping.impl.FilteringScope
+
 /**
  * This class contains custom scoping description.
  * 
@@ -19,6 +27,22 @@ package ch.semantonic.wok.dsl.scoping
  * on how and when to use it 
  *
  */
-class WokDslScopeProvider extends org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider {
+class WokDslScopeProvider extends AbstractDeclarativeScopeProvider {
+	
+	@Inject extension IQualifiedNameProvider qNameProvider
+	
+	/**
+	 * Prevent IncludedBox from referencing itself by removing itself from scope.
+	 * Note that elements in parent scope can still be 
+	 * {@link org.eclipse.xtext.scoping.impl.AbstractScope.ParentIterable shadowed} by context
+	 */
+	def IScope scope_IncludedBox_insert(IncludedBox context, EReference ref) {
+		
+		// filter out itself
+		val ctxQName = context.fullyQualifiedName
+		val origScope = delegateGetScope(context, ref);
+		
+        return new FilteringScope(origScope, [iod|iod.qualifiedName != ctxQName]);
+	}
 
 }
