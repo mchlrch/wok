@@ -15,39 +15,58 @@ package ch.semantonic.wok.dsl.tests
 import ch.semantonic.wok.dsl.WokDslInjectorProvider
 import ch.semantonic.wok.dsl.wokDsl.BasicBox
 import ch.semantonic.wok.dsl.wokDsl.DslRoot
-import ch.semantonic.wok.dsl.wokDsl.TextItem
 import ch.semantonic.wok.dsl.wokDsl.WokDslPackage
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipse.xtext.junit4.util.ParseHelper
 import org.eclipse.xtext.junit4.validation.ValidationTestHelper
-import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertTrue
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(WokDslInjectorProvider))
 class ParserTest {
 	
 	@Inject extension ParseHelper<DslRoot>
+	@Inject extension WokDslTestExt
 	@Inject extension ValidationTestHelper
 
 	@Test
 	def void testParsing() {
+		val volcanoName = "Paricutin"
+		val textValue = "Volcano in the Ring of Fire" 
+		val dateLabel = "birthdate"
+		val dateValue = "1943-02-20"
+		val locationLabel = "location"
+		val locationName = "Angahuan"
+		
 		val model = '''
-			Wikimania {
-			  date : "8–10 August 2014"
-			  location: "London"
+			«volcanoName» {
+			  "«textValue»"
+			  «dateLabel»: "«dateValue»"
+			  «locationLabel»: «locationName»
 			}
+			«locationName» {}
 		'''.parse
 		
-		val box = model.getElements().get(0) as BasicBox
-		Assert::assertEquals("Wikimania", box.getName())
+		val volcanoBox = model.element(0) as BasicBox
+		assertEquals(volcanoName, volcanoBox.getName())
 		
-		val item = box.getItems().get(0) as TextItem
-		Assert::assertEquals("date", item.label);
-		Assert::assertEquals("8–10 August 2014", item.value);
+		val locationBox = model.element(1) as BasicBox
+		assertEquals(locationName, locationBox.getName())
+		assertTrue(locationBox.items.empty)
+		
+		val dateItem = volcanoBox.textItem(1)
+		assertEquals(dateLabel, dateItem.label);
+		assertEquals(dateValue, dateItem.value);
+		
+		val locationItem = volcanoBox.rBoxItem(2)
+		assertEquals(locationLabel, locationItem.label);
+		assertEquals(locationBox, locationItem.value);
 	}
 	
 	@Test
@@ -81,51 +100,5 @@ class ParserTest {
 			}
 		'''.parse.assertError(WokDslPackage.Literals.INCLUDED_BOX, 'org.eclipse.xtext.diagnostics.Diagnostic.Linking')
 	}
-	
-//	@Test
-//	def void testParsingAndLinking() {
-//		'''
-//			package example {
-//			  entity MyEntity {
-//			    property : String
-//			    op foo(String s) : String {
-//			    	this.property = s
-//			    	return s.toUpperCase
-//			    }
-//			  }
-//			}
-//		'''.parse.assertNoErrors
-//	}
-//	
-//	@Test
-//	def void testParsingAndLinkingWithImports() {
-//		'''
-//			import java.util.List
-//			package example {
-//			  entity MyEntity {
-//			    p : List<String>
-//			  }
-//			}
-//		'''.parse.assertNoErrors
-//	}
-//	
-//	@Test
-//	def void testReturnTypeInference() {
-//		val model = '''
-//			package example {
-//			  entity MyEntity {
-//			    property : String
-//			    op foo(String s) {
-//			    	return property.toUpperCase + s
-//			    }
-//			  }
-//			}
-//		'''.parse
-//		val pack = model.elements.head as PackageDeclaration
-//		val entity = pack.elements.head as Entity
-//		val op = entity.features.last as Operation
-//		val method = op.jvmElements.head as JvmOperation
-//		Assert::assertEquals("String", method.returnType.simpleName)
-//	}
 
 }
