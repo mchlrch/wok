@@ -21,14 +21,15 @@ Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: ch.semantonic.wok.dsl,
- ch.semantonic.wok.dsl.services,
- ch.semantonic.wok.dsl.wokDsl,
- ch.semantonic.wok.dsl.wokDsl.impl,
- ch.semantonic.wok.dsl.wokDsl.util,
- ch.semantonic.wok.dsl.serializer,
+ ch.semantonic.wok.dsl.ext,
+ ch.semantonic.wok.dsl.formatting,
+ ch.semantonic.wok.dsl.generator,
  ch.semantonic.wok.dsl.parser.antlr,
  ch.semantonic.wok.dsl.parser.antlr.internal,
- ch.semantonic.wok.dsl.validation,
  ch.semantonic.wok.dsl.scoping,
- ch.semantonic.wok.dsl.generator,
- ch.semantonic.wok.dsl.formatting
+ ch.semantonic.wok.dsl.serializer,
+ ch.semantonic.wok.dsl.services,
+ ch.semantonic.wok.dsl.validation,
+ ch.semantonic.wok.dsl.wokDsl,
+ ch.semantonic.wok.dsl.wokDsl.impl,
+ ch.semantonic.wok.dsl.wokDsl.util

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Michael Rauch
+ * Copyright (c) 2014, 2015 Michael Rauch
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,15 @@
  * Michael Rauch - initial API and implementation
  *******************************************************************************/
 package ch.semantonic.wok.dsl.validation
-//import org.eclipse.xtext.validation.Check
+
+import ch.semantonic.wok.dsl.ext.BoxExt
+import ch.semantonic.wok.dsl.wokDsl.Box
+import ch.semantonic.wok.dsl.wokDsl.IncludedBox
+import ch.semantonic.wok.dsl.wokDsl.WokDslPackage
+import com.google.common.base.Optional
+import java.util.List
+import javax.inject.Inject
+import org.eclipse.xtext.validation.Check
 
 /**
  * Custom validation rules. 
@@ -20,14 +28,24 @@ package ch.semantonic.wok.dsl.validation
  */
 class WokDslValidator extends AbstractWokDslValidator {
 
-//  public static val INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	def checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//			warning('Name should start with a capital', 
-//					MyDslPackage.Literals.GREETING__NAME,
-//					INVALID_NAME)
-//		}
-//	}
+	@Inject extension BoxExt boxExt;
+	
+	public static val CYCLIC_CONTAINMENT = 'cyclicContainmentRelationship'
+
+
+	@Check
+	def noCyclesWhenIncludingBox(IncludedBox includedBox) {
+		
+		// '[x] as z' is-valid-if z.containmentPathFrom(x).isAbsent
+		val Optional<List<Box>> containmentPath = includedBox.containmentPathFrom(includedBox.insert);
+		
+		if (containmentPath.present) {
+			error('''Including '«includedBox.insert.name»' leads to containment cycle: '''
+				+ '''«FOR pathSegment: containmentPath.get SEPARATOR '/'»«pathSegment.name»«ENDFOR»''',
+				WokDslPackage.Literals.INCLUDED_BOX__INSERT,
+				CYCLIC_CONTAINMENT
+			)
+		}
+	}
+	
 }

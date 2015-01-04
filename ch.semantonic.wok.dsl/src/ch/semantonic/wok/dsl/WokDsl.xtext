@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Michael Rauch
+ * Copyright (c) 2014, 2015 Michael Rauch
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,8 +33,10 @@ IncludedBox:
 	'[' insert=[Box | QualifiedName] ']' 'as' name=ID;
 
 Item:
-	TextItem | ContainedBoxItem | ReferencedBoxItem;
-//    x: ""         x: Y{}            x:  _Y
+	TextItem | BoxItem;
+
+BoxItem:
+	ContainedBoxItem | ReferencedBoxItem;
 
 TextItem:
 	(label=ID ':')? value=STRING;
@@ -51,7 +53,7 @@ QualifiedName:
 //QualifiedNameWithWildcard:
 //	QualifiedName '.' '*';
 
-terminal ID: '^'?('a'..'z'|'A'..'Z'|'0'..'9') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+terminal ID: '^'?('a'..'z'|'A'..'Z'|'_'|'0'..'9')+;
 
 //ImportSection:
 //	importDeclarations+=ImportDeclaration+;
